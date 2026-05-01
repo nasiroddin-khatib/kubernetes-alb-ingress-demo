@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: website-deployment
+  labels:
+    app: prod
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: prod
+  template:
+    metadata:
+      labels:
+        app: prod
+    spec:
+      containers:
+      - name: container
+        image: nasir590/website-image:latest
+        ports:
+          - containerPort: 80
+
+        # Health Probes
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15   
+          periodSeconds: 10         
+          failureThreshold: 3   
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5  
+          periodSeconds: 5          
+          failureThreshold: 2     
+
+
